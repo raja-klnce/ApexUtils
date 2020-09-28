@@ -1,3 +1,8 @@
+/* Name: ExecuteDmlQueuableBatches
+Description :  Utility class that chunks list of sobject records and does DML by chained queuable jobs with 
+               the desired batch size
+Author : Raja Karuppasamy
+*/
 public with sharing class ExecuteDmlQueuableBatches implements Queueable {
     private Map<Integer, List<Sobject>>  records;
     private String action;      //insert or update or upsert or delete

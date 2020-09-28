@@ -1,4 +1,18 @@
+/* Name: CrudFlsUtility
+Description : Utility class that contains methods to help in CRUD & FLS checks
+Author : Raja Karuppasamy
+*/
 public with sharing class CrudFlsUtility {
+    /*
+    Purpose:    Used to check CRUD & FLS access for the logged in user using StripInaccessible feature
+    Input(s):   records - List of Sobjects that you either queried already or going to be used in DML
+                accessCheck - AccessType enum - CREATABLE/READBLE/UPDATABLE/UPSERTABLE
+                checkCRUD - Flag to enforce CRUD check
+                checkFLS - Flag to enforce FLS check on the fields present in the sobjects
+    Returns:    ApexResponse. status = true if Check/FLS check is successful.
+                              records = stripped sobjects with accessible field values
+                              errorMessage = Message that states all objects and fields which miss CRUD/FLS
+    */
     public static ApexResponse checkCRUDandFLSpermissions(List<SObject> records, AccessType accessCheck,Boolean checkCRUD, Boolean checkFLS){
         ApexResponse response = new ApexResponse();
         if(!records.isEmpty()){
@@ -35,6 +49,7 @@ public with sharing class CrudFlsUtility {
         return response;
     }
 
+    //Helper method for checkCRUDandFLSpermissions
     private static String extractChildObjsMissingCRUD(Map<String,Set<String>> fieldsMap, DescribeSObjectResult baseObjDescribe){
         String objectLabelsStr = '';
         if(fieldsMap.containsKey(baseObjDescribe.getName())){
@@ -51,6 +66,7 @@ public with sharing class CrudFlsUtility {
         return objectLabelsStr.removeStart(', ');
     }    
 
+    //Helper method for checkCRUDandFLSpermissions
     private static String extractFlsMissingFields(Map<String,Set<String>> fieldsMap, AccessType accessCheck){
         String fieldLabelsStr = '';
         Set<String> fieldLabels = new Set<String>();
@@ -64,6 +80,7 @@ public with sharing class CrudFlsUtility {
         return fieldLabelsStr;
     }
     
+    //Helper method for checkCRUDandFLSpermissions
     private static Map<String, String> convertFieldNamesIntoLabels(Set<String> fieldNames, String objName, AccessType accessCheck){
         Map<String, String> returnMap = new Map<String, String>();
         Map<String,Schema.SObjectField> fieldsSchema = Schema.getGlobalDescribe().get(objName).getDescribe().fields.getMap();

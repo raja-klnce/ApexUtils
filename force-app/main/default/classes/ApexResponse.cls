@@ -1,3 +1,7 @@
+/* Name: QueueableJobsHandler
+Description : Generic wrapper class to send response from Apex to Aura/LWC 
+Author : Raja Karuppasamy
+*/
 public with sharing class ApexResponse {
     @AuraEnabled
     public Boolean status;
